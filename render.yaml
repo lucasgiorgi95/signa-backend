@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: signa-backend
+    env: docker
+    dockerContext: .
+    dockerfile: Dockerfile
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: PYTHON_VERSION
+        value: 3.13.0

@@ -1,6 +1,7 @@
-# Etapa de construcción
-FROM python:3.10-slim as builder
+# Usar una imagen base de Python 3.13
+FROM python:3.13-slim
 
+# Establecer el directorio de trabajo
 WORKDIR /app
 
 # Instalar dependencias del sistema
@@ -8,24 +9,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Instalar dependencias de Python
+# Copiar los archivos necesarios
 COPY requirements.txt .
-RUN pip install --user -r requirements.txt
 
-# Etapa de producción
-FROM python:3.10-slim
-
-WORKDIR /app
-
-# Copiar dependencias instaladas
-COPY --from=builder /root/.local /root/.local
-
-# Asegurarse de que los scripts en .local sean ejecutables
-ENV PATH=/root/.local/bin:$PATH \
-    PYTHONPATH=/app \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PYTHONFAULTHANDLER=1
+# Instalar dependencias de Python
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Copiar la aplicación
 COPY . .
