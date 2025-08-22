@@ -4,13 +4,24 @@ services:
     env: docker
     dockerContext: .
     dockerfile: Dockerfile
+    
     # Habilitar almacenamiento persistente para SQLite
     disk:
       name: signa-data
-      mountPath: /app
+      mountPath: /app/data  # Solo montar el directorio de datos
       sizeGB: 1
+    
+    # Configuración de recursos
+    plan: free
+    
+    # Variables de entorno
     envVars:
       - key: PORT
         value: 8000
       - key: PYTHON_VERSION
         value: 3.13.0
+      - key: DATABASE_URL
+        value: /app/data/marcas.db  # Ruta dentro del contenedor
+    
+    # Comando de inicio (opcional, ya que está en el Dockerfile)
+    startCommand: /app/start.sh
