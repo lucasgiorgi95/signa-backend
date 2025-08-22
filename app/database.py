@@ -10,26 +10,29 @@ load_dotenv()
 
 # Obtener la ruta de la base de datos
 def get_database_url():
-    # Obtener la ruta de la base de datos de las variables de entorno
-    db_path = os.getenv('DATABASE_URL', '/data/marcas.db')
+    # Obtener la URL de la base de datos de las variables de entorno
+    database_url = os.getenv('DATABASE_URL', 'sqlite:///./marcas.db')
     
-    # Convertir a ruta absoluta
-    db_path = str(Path(db_path).absolute())
+    # Si ya es una URL completa de SQLite, extraer solo la ruta del archivo
+    if database_url.startswith('sqlite:///'):
+        db_file_path = database_url.replace('sqlite:///', '')
+        
+        # Si es una ruta relativa (empieza con ./), convertir a absoluta
+        if db_file_path.startswith('./'):
+            db_file_path = os.path.abspath(db_file_path)
+        
+        # Asegurarse de que el directorio existe
+        db_dir = os.path.dirname(db_file_path)
+        if db_dir:  # Solo si hay un directorio
+            try:
+                os.makedirs(db_dir, exist_ok=True)
+            except Exception as e:
+                print(f"Advertencia: No se pudo crear el directorio de la base de datos: {e}")
+        
+        # Retornar la URL completa
+        return f'sqlite:///{db_file_path}'
     
-    # Asegurarse de que el directorio existe
-    try:
-        os.makedirs(os.path.dirname(db_path), exist_ok=True)
-        # Dar permisos al directorio
-        os.chmod(os.path.dirname(db_path), 0o777)
-    except Exception as e:
-        print(f"Advertencia: No se pudo configurar el directorio de la base de datos: {e}")
-    
-    # Asegurarse de que la ruta empieza con 3 barras para rutas absolutas en SQLite
-    if not db_path.startswith('sqlite:'):
-        if db_path.startswith('/'):
-            return f'sqlite://{db_path}'
-        return f'sqlite:///{db_path}'
-    return db_path
+    return database_url
 
 # Configurar la URL de la base de datos
 SQLALCHEMY_DATABASE_URL = get_database_url()
