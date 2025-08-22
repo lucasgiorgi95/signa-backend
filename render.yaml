@@ -8,7 +8,7 @@ services:
     # Habilitar almacenamiento persistente para SQLite
     disk:
       name: signa-data
-      mountPath: /data  # Montar en /data en lugar de /app/data
+      mountPath: /data  # Montar en /data
       sizeGB: 1
     
     # Configuración de recursos
@@ -21,7 +21,7 @@ services:
       - key: PYTHON_VERSION
         value: 3.13.0
       - key: DATABASE_URL
-        value: /data/marcas.db  # Usar /data en lugar de /app/data
+        value: /data/marcas.db  # Ruta absoluta a la base de datos
     
     # Comando de inicio
-    startCommand: /app/start.sh
+    startCommand: /bin/sh -c "chmod +x /app/start.sh && /app/start.sh"
