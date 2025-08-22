@@ -8,12 +8,15 @@ from sqlalchemy.orm import sessionmaker
 # Cargar variables de entorno
 load_dotenv()
 
-# Configurar ruta absoluta para la base de datos SQLite
-BASE_DIR = Path(__file__).resolve().parent.parent
-SQLITE_DB_PATH = os.path.join(BASE_DIR, 'marcas.db')
+# Configurar ruta para la base de datos SQLite
+# Usamos /app/data/marcas.db para coincidir con la configuración en start.sh
+SQLITE_DB_PATH = "/app/data/marcas.db"
+
+# Asegurar que el directorio existe
+os.makedirs(os.path.dirname(SQLITE_DB_PATH), exist_ok=True)
 
 # Usar SQLite en todos los entornos
-SQLALCHEMY_DATABASE_URL = f"sqlite:///{SQLITE_DB_PATH}"
+SQLALCHEMY_DATABASE_URL = f"sqlite://{SQLITE_DB_PATH}"
 
 # Configurar el motor de SQLite
 engine = create_engine(
