@@ -4,6 +4,11 @@ services:
     env: docker
     dockerContext: .
     dockerfile: Dockerfile
+    # Habilitar almacenamiento persistente para SQLite
+    disk:
+      name: signa-data
+      mountPath: /app
+      sizeGB: 1
     envVars:
       - key: PORT
         value: 8000
