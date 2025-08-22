@@ -7,10 +7,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sqlite3 \
     && rm -rf /var/lib/apt/lists/*
 
-# Crear directorio para la aplicación y dar permisos
-RUN mkdir -p /app/data && \
-    chmod 777 /app && \
-    chmod 777 /app/data
+# Crear directorio para la aplicación
+RUN mkdir -p /app
 
 # Establecer el directorio de trabajo
 WORKDIR /app
@@ -25,13 +23,17 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copiar la aplicación
 COPY . .
 
+# Crear directorio de datos con permisos amplios
+RUN mkdir -p /app/data && \
+    chmod -R 777 /app/data
+
+# Hacer que el script sea ejecutable
+RUN chmod +x /app/start.sh
+
 # Puerto expuesto
 EXPOSE 8000
 
-# Cambiar permisos del script de inicio
-RUN chmod +x /app/start.sh
-
-# Usar un usuario no-root (1000 es el usuario por defecto en Render)
+# Usar el usuario por defecto de Render (no-root)
 USER 1000
 
 # Comando para ejecutar la aplicación

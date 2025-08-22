@@ -8,7 +8,7 @@ services:
     # Habilitar almacenamiento persistente para SQLite
     disk:
       name: signa-data
-      mountPath: /app/data  # Solo montar el directorio de datos
+      mountPath: /data  # Montar en /data en lugar de /app/data
       sizeGB: 1
     
     # Configuración de recursos
@@ -21,7 +21,7 @@ services:
       - key: PYTHON_VERSION
         value: 3.13.0
       - key: DATABASE_URL
-        value: /app/data/marcas.db  # Ruta dentro del contenedor
+        value: /data/marcas.db  # Usar /data en lugar de /app/data
     
-    # Comando de inicio (opcional, ya que está en el Dockerfile)
+    # Comando de inicio
     startCommand: /app/start.sh
