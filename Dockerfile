@@ -23,7 +23,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copiar la aplicación
 COPY . .
 
-# Crear directorio de datos con permisos amplios
+# Crear directorio de datos local como fallback
 RUN mkdir -p /app/data && \
     chmod -R 777 /app/data
 
@@ -32,9 +32,6 @@ RUN chmod +x /app/start.sh
 
 # Puerto expuesto
 EXPOSE 8000
-
-# Usar el usuario por defecto de Render (no-root)
-USER 1000
 
 # Comando para ejecutar la aplicación
 CMD ["/app/start.sh"]

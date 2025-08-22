@@ -21,7 +21,7 @@ services:
       - key: PYTHON_VERSION
         value: 3.13.0
       - key: DATABASE_URL
-        value: /data/marcas.db  # Ruta absoluta a la base de datos
+        value: sqlite:////data/marcas.db  # URL completa de SQLite
     
     # Comando de inicio
     startCommand: /bin/sh -c "chmod +x /app/start.sh && /app/start.sh"

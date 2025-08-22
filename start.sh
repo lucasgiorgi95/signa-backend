@@ -2,30 +2,27 @@
 
 # Configuración de rutas
 APP_DIR="/app"
-DATA_DIR="/data"  # Cambiado a /data para coincidir con render.yaml
+DATA_DIR="/data"  # Directorio montado por Render
 DB_PATH="$DATA_DIR/marcas.db"
 
-# Verificar y crear directorio de datos con permisos
-echo "Configurando directorio de datos en $DATA_DIR..."
+# Verificar que el directorio de datos esté disponible
+echo "Verificando directorio de datos en $DATA_DIR..."
 
-# Crear directorio de datos si no existe
+# Esperar a que el directorio esté disponible (Render lo monta automáticamente)
 if [ ! -d "$DATA_DIR" ]; then
-    mkdir -p "$DATA_DIR"
-    chmod -R 777 "$DATA_DIR"
-    
-    # Verificar si se creó correctamente
-    if [ $? -ne 0 ]; then
-        echo "ERROR: No se pudo crear el directorio de datos en $DATA_DIR"
-        exit 1
-    fi
-    
-    echo "Directorio de datos creado correctamente"
-else
-    echo "El directorio de datos ya existe"
+    echo "Esperando a que Render monte el directorio de datos..."
+    sleep 2
 fi
 
-# Verificar permisos
-chmod -R 777 "$DATA_DIR"
+# Verificar nuevamente
+if [ ! -d "$DATA_DIR" ]; then
+    echo "ADVERTENCIA: Directorio de datos no disponible, usando directorio local"
+    DATA_DIR="/app/data"
+    DB_PATH="$DATA_DIR/marcas.db"
+    mkdir -p "$DATA_DIR"
+fi
+
+echo "Usando directorio de datos: $DATA_DIR"
 
 # Crear la base de datos si no existe
 if [ ! -f "$DB_PATH" ]; then
@@ -58,8 +55,12 @@ fi
 echo "Verificando permisos..."
 ls -la "$DATA_DIR"
 
-# Usar la variable de entorno para la URL de la base de datos
-export DATABASE_URL="sqlite://$DB_PATH"
+# Configurar la variable de entorno para la URL de la base de datos
+if [ -z "$DATABASE_URL" ]; then
+    export DATABASE_URL="sqlite:///$DB_PATH"
+fi
+
+echo "Usando DATABASE_URL: $DATABASE_URL"
 
 echo "Iniciando la aplicación en el puerto ${PORT:-8000}..."
 
