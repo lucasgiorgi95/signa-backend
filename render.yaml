@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: signa-backend
-    env: docker
-    dockerContext: .
-    dockerfile: Dockerfile
-    envVars:
-      - key: PORT
-        value: 8000

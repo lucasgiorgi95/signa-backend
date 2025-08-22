@@ -1,27 +1,37 @@
-FROM python:3.10-slim
+# Etapa de construcción
+FROM python:3.10-slim as builder
 
 WORKDIR /app
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PYTHONFAULTHANDLER=1
-
-# Install system dependencies
+# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Instalar dependencias de Python
 COPY requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip==23.0.1 && \
-    pip install --no-cache-dir -r requirements.txt
+RUN pip install --user -r requirements.txt
 
-# Copy only necessary files
-COPY app/ ./app
+# Etapa de producción
+FROM python:3.10-slim
 
-# Expose the port the app runs on
+WORKDIR /app
+
+# Copiar dependencias instaladas
+COPY --from=builder /root/.local /root/.local
+
+# Asegurarse de que los scripts en .local sean ejecutables
+ENV PATH=/root/.local/bin:$PATH \
+    PYTHONPATH=/app \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONFAULTHANDLER=1
+
+# Copiar la aplicación
+COPY . .
+
+# Puerto expuesto
 EXPOSE 8000
 
-# Command to run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "1"]
+# Comando para ejecutar la aplicación
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
