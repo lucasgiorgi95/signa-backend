@@ -2,8 +2,6 @@
 
 Este es un backend desarrollado con FastAPI y SQLite para el registro y gestión de marcas comerciales.
 
-
-
 ### Requisitos Previos
 
 - Python 3.8 o superior
@@ -13,12 +11,14 @@ Este es un backend desarrollado con FastAPI y SQLite para el registro y gestión
 ### Instalación
 
 1. Clona el repositorio:
+
    ```bash
    git clone https://github.com/tu-usuario/signa-backend.git
    cd signa-backend
    ```
 
 2. Crea y activa un entorno virtual:
+
    ```bash
    # Windows
    python -m venv venv
@@ -34,8 +34,8 @@ Este es un backend desarrollado con FastAPI y SQLite para el registro y gestión
    pip install -r requirements.txt
    ```
 
-
 #### Usando el script run.py
+
 ```bash
 python run.py
 ```
@@ -43,7 +43,9 @@ python run.py
 El servidor estará disponible en `http://localhost:8000`
 
 #### Variables de Entorno
+
 Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
+
 ```
 HOST=0.0.0.0
 PORT=8000
@@ -163,11 +165,13 @@ alembic upgrade head
 ### Railway
 
 1. Instala la CLI de Railway:
+
    ```bash
    npm i -g @railway/cli
    ```
 
 2. Inicia sesión:
+
    ```bash
    railway login
    ```

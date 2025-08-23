@@ -2,21 +2,11 @@ services:
   - type: web
     name: signa-backend
     env: docker
-    dockerContext: .
-    dockerfile: Dockerfile
-    
-    # Configuración de recursos
+    dockerfilePath: ./Dockerfile
     plan: free
-    
-    # Variables de entorno
     envVars:
       - key: PORT
         value: 8000
-      - key: PYTHON_VERSION
-        value: 3.13.0
-    
-    # Comando de inicio
-    startCommand: /bin/sh -c "chmod +x /app/start.sh && /app/start.sh"
 
 databases:
   - name: signa-db
