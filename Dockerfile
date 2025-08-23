@@ -1,10 +1,10 @@
 # Usar una imagen base de Python 3.13
 FROM python:3.13-slim
 
-# Instalar dependencias del sistema incluyendo SQLite
+# Instalar dependencias del sistema
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    sqlite3 \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Crear directorio para la aplicación
@@ -23,9 +23,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copiar la aplicación
 COPY . .
 
-# Crear directorio de datos local como fallback
-RUN mkdir -p /app/data && \
-    chmod -R 777 /app/data
+# Crear directorio de trabajo
 
 # Hacer que el script sea ejecutable
 RUN chmod +x /app/start.sh
