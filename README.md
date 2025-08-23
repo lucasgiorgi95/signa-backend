@@ -1,50 +1,32 @@
-# API de Registro de Marcas
+# Backend para Registro de Marcas
 
-Este es un backend desarrollado con FastAPI y SQLite para el registro y gestión de marcas comerciales.
+Una API simple hecha con FastAPI para manejar marcas comerciales. Usa SQLite así que no necesitas configurar nada complicado.
 
-### Requisitos Previos
+## Cómo empezar
 
-- Python 3.8 o superior
-- pip (gestor de paquetes de Python)
-- Git (opcional, para control de versiones)
+Necesitas Python 3.8+ y ya.
 
-### Instalación
-
-1. Clona el repositorio:
-
+1. Clona esto:
    ```bash
-   git clone https://github.com/tu-usuario/signa-backend.git
+   git clone [tu-repo]
    cd signa-backend
    ```
 
-2. Crea y activa un entorno virtual:
-
-   ```bash
-   # Windows
-   python -m venv venv
-   .\venv\Scripts\activate
-
-   # macOS/Linux
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-
-3. Instala las dependencias:
+2. Instala las cosas:
    ```bash
    pip install -r requirements.txt
    ```
 
-#### Usando el script run.py
+3. Ejecuta:
+   ```bash
+   python run.py
+   ```
 
-```bash
-python run.py
-```
+Ya tienes el servidor corriendo en `http://localhost:8000`
 
-El servidor estará disponible en `http://localhost:8000`
+## Variables de entorno
 
-#### Variables de Entorno
-
-Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
+Si quieres cambiar algo, crea un `.env`:
 
 ```
 HOST=0.0.0.0
@@ -52,135 +34,37 @@ PORT=8000
 DEBUG=True
 ```
 
-## Características
+## Qué hace
 
-- CRUD completo para marcas (Crear, Leer, Actualizar, Eliminar)
-- Base de datos SQLite para almacenamiento persistente
-- Documentación automática con Swagger UI y ReDoc
-- Validación de datos con Pydantic
-- Estructura modular y escalable
+- Crear, ver, editar y borrar marcas
+- Base de datos SQLite (se crea sola)
+- Documentación automática en `/api/v1/docs`
 
-## 🏗️ Estructura del Proyecto
 
-```
-signa-prueba-backend/
-├── .env.example           # Plantilla de variables de entorno
-├── .gitignore             # Archivos ignorados por Git
-├── Procfile               # Configuración para despliegue en Railway
-├── requirements.txt       # Dependencias del proyecto
-├── runtime.txt            # Versión de Python para producción
-└── app/                   # Código fuente de la aplicación
-    ├── __init__.py
-    ├── main.py           # Punto de entrada de la aplicación
-    ├── database.py       # Configuración de la base de datos
-    ├── models/           # Modelos de SQLAlchemy
-    │   ├── __init__.py
-    │   └── marca.py      # Modelo de Marca
-    ├── schemas/          # Esquemas Pydantic
-    │   ├── __init__.py
-    │   └── marca.py      # Esquemas para validación de datos
-    └── api/              # Rutas y controladores
-        ├── __init__.py
-        └── v1/           # API Versión 1
-            ├── __init__.py
-            ├── api.py    # Router principal
-            └── endpoints/
-                ├── __init__.py
-                └── marcas.py  # Endpoints de Marcas
-```
 
-### Componentes Principales
+Los archivos importantes:
+- `main.py` - Donde se configura FastAPI y CORS
+- `database.py` - Conexión a SQLite
+- `models/marca.py` - Modelo de Marca
+- `api/v1/endpoints/marcas.py` - Todos los endpoints
 
-- **app/main.py**: Configuración principal de FastAPI y middleware CORS
-- **app/database.py**: Configuración de la conexión a la base de datos
-- **app/models/**: Modelos de SQLAlchemy
-- **app/schemas/**: Esquemas Pydantic para validación de datos
-- **app/api/v1/**: Implementación de los endpoints de la API
+## API
 
-## 🛠️ Desarrollo
+Una vez que esté corriendo, puedes ver la documentación en:
+- `http://localhost:8000/api/v1/docs` - Swagger UI
+- `http://localhost:8000/api/v1/redoc` - ReDoc
 
-### Variables de Entorno
+### Endpoints
 
-Crea un archivo `.env` basado en `.env.example` con las siguientes variables:
+**Marcas** (`/api/v1/marcas/`):
+- `GET /` - Ver todas las marcas
+- `POST /` - Crear marca nueva
+- `GET /{id}` - Ver una marca
+- `PUT /{id}` - Actualizar marca
+- `DELETE /{id}` - Borrar marca
 
-```
-HOST=0.0.0.0
-PORT=8000
-DEBUG=True
-DATABASE_URL=sqlite:///./marcas.db
-```
+## Despliegue
 
-### Formateo de Código
+Para subir a Render o Railway solo necesitas conectar el repo. Ya está configurado con los archivos necesarios.
 
-El proyecto utiliza `black` para formateo de código:
-
-```bash
-# Instalar black
-pip install black
-
-# Formatear código
-black .
-```
-
-### Pruebas
-
-Para ejecutar las pruebas:
-
-```bash
-pytest
-```
-
-## 📚 Documentación de la API
-
-La documentación interactiva está disponible cuando el servidor está en ejecución:
-
-- **Swagger UI (Interactivo):** `http://localhost:8000/api/v1/docs`
-- **ReDoc (Documentación alternativa):** `http://localhost:8000/api/v1/redoc`
-
-### Endpoints Disponibles
-
-#### Marcas (`/api/v1/marcas/`)
-
-- `GET /` - Lista todas las marcas
-- `POST /` - Crea una nueva marca
-- `GET /{id}` - Obtiene una marca por ID
-- `PUT /{id}` - Actualiza una marca existente
-- `DELETE /{id}` - Elimina una marca
-
-## 🗃️ Base de Datos
-
-La aplicación utiliza SQLite por defecto, con la base de datos `marcas.db` que se crea automáticamente en el directorio raíz durante el primer inicio.
-
-### Migraciones
-
-Para crear una nueva migración con Alembic:
-
-```bash
-alembic revision --autogenerate -m "descripcion del cambio"
-alembic upgrade head
-```
-
-## 🚀 Despliegue
-
-### Railway
-
-1. Instala la CLI de Railway:
-
-   ```bash
-   npm i -g @railway/cli
-   ```
-
-2. Inicia sesión:
-
-   ```bash
-   railway login
-   ```
-
-3. Despliega la aplicación:
-   ```bash
-   railway up
-   ```
-
-## 📄 Licencia
-
-Este proyecto está bajo la [Licencia MIT](LICENSE).
+La base de datos SQLite se crea automáticamente la primera vez que corres la app.
